@@ -14,16 +14,62 @@ const generateArray = (number) => {
 
 const Tree = (array) => {
   const root = buildTree(mergeSort(array), 0, array.length - 1, null);
-  console.log(mergeSort(array));
-  console.log(new Set(mergeSort(array)));
   prettyPrint(root);
-  return root;
+  return {
+    root: root,
+
+    toInsert(...array) {
+      const insert = (root, value) => {
+        if (root == null) {
+          root = Node(value);
+          return root;
+        }
+        if (value == root.value) {
+          root.count++;
+          console.log(root.count);
+          return root;
+        } else if (value < root.value) {
+          root.left = insert(root.left, value);
+        } else {
+          root.right = insert(root.right, value);
+        }
+        return root;
+      };
+      let newArray = [];
+      if (Array.isArray(array[0])) {
+        newArray = [...array[0]];
+      } else {
+        newArray = [...array];
+      }
+    
+      newArray.forEach((item) => {
+        insert(root, item);
+      });
+    },
+    
+    prettyPrint (node, prefix = "", isLeft = true) => {
+      if (node === null) {
+        return;
+      }
+      if (node.right !== null) {
+        prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
+      }
+      console.log(
+        `${prefix}${isLeft ? "└── " : "┌── "}${node.value}${
+          node.count > 1 ? "(" + node.count + ")" : ""
+        }`
+      );
+      if (node.left !== null) {
+        prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
+      }
+    };
+  };
 };
 
 const Node = (value) => {
   return {
     value: value,
-    count: 0,
+    count: 1,
     left: null,
     right: null,
   };
@@ -33,7 +79,7 @@ const buildTree = (array, start, end) => {
   let mid = Math.floor((start + end) / 2);
   let midSub = Math.floor((start + end) / 2);
   if (start > end) return null;
-  let count = 1;
+  let count = 0;
 
   const root = Node(array[mid]);
 
@@ -53,6 +99,8 @@ const buildTree = (array, start, end) => {
 
   return root;
 };
+
+
 
 const mergeSort = (array) => {
   if (array.length <= 1) return array;
@@ -85,21 +133,6 @@ const merge = (left, right) => {
   return result.concat(left.slice(leftI)).concat(right.slice(rightI));
 };
 
-const prettyPrint = (node, prefix = "", isLeft = true) => {
-  if (node === null) {
-    return;
-  }
-  if (node.right !== null) {
-    prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
-  }
-  console.log(
-    `${prefix}${isLeft ? "└── " : "┌── "}${node.value}${
-      node.count > 1 ? "(" + node.count + ")" : ""
-    }`
-  );
-  if (node.left !== null) {
-    prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
-  }
-};
+
 
 console.log(Tree(/* filterArray( */ generateArray(100) /* ) */));
