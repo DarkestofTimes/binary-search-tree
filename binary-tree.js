@@ -97,12 +97,44 @@ const Tree = (array) => {
       });
     },
 
+    toFind(...array) {
+      const find = (node, value) => {
+        if (node == null) {
+          return node;
+        }
+
+        if (value < node.value) {
+          node.left = find(node.left, value);
+          return node;
+        } else if (value > node.value) {
+          node.right = find(node.right, value);
+          return node;
+        }
+        console.log(node);
+        return node;
+      };
+      let newArray = [];
+      if (Array.isArray(array[0])) {
+        newArray = [...array[0]];
+      } else {
+        newArray = [...array];
+      }
+
+      newArray.forEach((item) => {
+        find(this.root, item);
+      });
+    },
+
     prettyPrint(node = this.root, prefix = "", isLeft = true) {
       if (node === null) {
         return;
       }
       if (node.right !== null) {
-        prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
+        this.prettyPrint(
+          node.right,
+          `${prefix}${isLeft ? "│   " : "    "}`,
+          false
+        );
       }
       console.log(
         `${prefix}${isLeft ? "└── " : "┌── "}${node.value}${
@@ -110,7 +142,11 @@ const Tree = (array) => {
         }`
       );
       if (node.left !== null) {
-        prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
+        this.prettyPrint(
+          node.left,
+          `${prefix}${isLeft ? "    " : "│   "}`,
+          true
+        );
       }
     },
   };
@@ -184,5 +220,6 @@ const merge = (left, right) => {
 const newTree = Tree(generateArray(100));
 newTree.toInsert(3, 15, 76, 89, 54, 98);
 newTree.toRemove(3, 13, 17, 25, 68);
+newTree.toFind(4, 12, 15, 25, 64);
 newTree.prettyPrint();
 console.log(newTree);
