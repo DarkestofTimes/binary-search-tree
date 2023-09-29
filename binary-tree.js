@@ -44,6 +44,59 @@ const Tree = (array) => {
       });
     },
 
+    toRemove(...array) {
+      const remove = (node, value) => {
+        if (node == null) {
+          return node;
+        }
+
+        if (value < node.value) {
+          node.left = remove(node.left, value);
+          return node;
+        } else if (value > node.value) {
+          node.right = remove(node.right, value);
+          return node;
+        }
+
+        if (node.left == null) {
+          let temp = node.right;
+          delete node;
+          return temp;
+        } else if (node.right === null) {
+          let temp = node.left;
+          delete node;
+          return temp;
+        } else {
+          let parent = node;
+          let successor = node.right;
+          while (successor.left !== null) {
+            parent = successor;
+            successor = successor.left;
+          }
+          if (parent !== node) {
+            parent.left = successor.right;
+          } else {
+            parent.right = successor.right;
+          }
+          node.value = successor.value;
+
+          delete successor;
+          return node;
+        }
+      };
+
+      let newArray = [];
+      if (Array.isArray(array[0])) {
+        newArray = [...array[0]];
+      } else {
+        newArray = [...array];
+      }
+
+      newArray.forEach((item) => {
+        remove(this.root, item);
+      });
+    },
+
     prettyPrint(node = this.root, prefix = "", isLeft = true) {
       if (node === null) {
         return;
@@ -130,5 +183,6 @@ const merge = (left, right) => {
 
 const newTree = Tree(generateArray(100));
 newTree.toInsert(3, 15, 76, 89, 54, 98);
+newTree.toRemove(3, 13, 17, 25, 68);
 newTree.prettyPrint();
 console.log(newTree);
