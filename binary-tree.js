@@ -14,7 +14,7 @@ const generateArray = (number) => {
 
 const Tree = (array) => {
   return {
-    root: buildTree(mergeSort(array), 0, array.length - 1, null),
+    root: buildTree(mergeSort(array), 0, array.length - 1),
 
     toInsert(...array) {
       const insert = (root, value) => {
@@ -284,17 +284,31 @@ const buildTree = (array, start, end) => {
 
   return root;
 };
-
 const isBalanced = (root) => {
-  if (root == null) return 0;
+  const checkBalance = (root) => {
+    if (root == null) return 0;
 
-  let lHeight = isBalanced(root.left);
-  if (lHeight == -1) return -1;
-  let rHeight = isBalanced(root.right);
-  if (rHeight == -1) return -1;
+    let lHeight = checkBalance(root.left);
+    if (lHeight == -1) return -1;
+    let rHeight = checkBalance(root.right);
+    if (rHeight == -1) return -1;
 
-  if (Math.abs(lHeight - rHeight) > 1) return -1;
-  else return Math.max(lHeight, rHeight) + 1;
+    if (Math.abs(lHeight - rHeight) > 1) return -1;
+    else return Math.max(lHeight, rHeight) + 1;
+  };
+
+  if (checkBalance(root) > 0) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+const reBalance = () => {
+  const newArray = newTree.inOrder();
+  const newRoot = buildTree(newArray, 0, newArray.length - 1);
+
+  newTree.root = newRoot;
 };
 
 const height = (root, node) => {
@@ -357,10 +371,13 @@ const newTree = Tree(generateArray(100));
 newTree.toInsert(3, 15, 76, 89, 54, 98);
 newTree.toRemove(3, 13, 17, 25, 68);
 newTree.toFind(4, 12, 15, 25, 64);
-newTree.prettyPrint();
 newTree.levelOrder();
-newTree.inOrder(height);
-newTree.preOrder(depth);
+newTree.inOrder();
+newTree.preOrder();
 newTree.postOrder();
+newTree.prettyPrint();
+console.log(isBalanced(newTree.root));
+reBalance();
+newTree.prettyPrint();
 console.log(isBalanced(newTree.root));
 console.log(newTree.root);
