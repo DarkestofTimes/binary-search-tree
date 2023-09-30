@@ -158,7 +158,7 @@ const Tree = (array) => {
         traverse(node.left, func, array, root);
         if (func) {
           func(root, node);
-          console.log(func(root, node), "inOrder");
+          console.log(func(root, node), node.value, "inOrder");
         } else {
           array.push(node.value);
         }
@@ -183,7 +183,7 @@ const Tree = (array) => {
 
         if (func) {
           func(root, node);
-          console.log(func(root, node), "preOrder");
+          console.log(func(root, node), node.value, "preOrder");
         } else {
           array.push(node.value);
         }
@@ -210,7 +210,7 @@ const Tree = (array) => {
         traverse(node.right, func, array, root);
         if (func) {
           func(root, node);
-          console.log(func(root, node), "postOrder");
+          console.log(func(root, node), node.value, "postOrder");
         } else {
           array.push(node.value);
         }
@@ -285,18 +285,25 @@ const buildTree = (array, start, end) => {
   return root;
 };
 
+const isBalanced = (root) => {
+  if (root == null) return 0;
+
+  let lHeight = isBalanced(root.left);
+  if (lHeight == -1) return -1;
+  let rHeight = isBalanced(root.right);
+  if (rHeight == -1) return -1;
+
+  if (Math.abs(lHeight - rHeight) > 1) return -1;
+  else return Math.max(lHeight, rHeight) + 1;
+};
+
 const height = (root, node) => {
-  let lHeight = 0;
-  let rHeight = 0;
-  if (node == null) return;
+  if (node == null) return -1;
 
-  if (node.left) {
-    const leftHeight = height(node.left);
-  } else if (node.right) {
-    const rightHeight = height(node.right);
-  }
+  const leftHeight = height(root, node.left);
+  const rightHeight = height(root, node.right);
 
-  return;
+  return Math.max(leftHeight, rightHeight) + 1;
 };
 
 const depth = (root, node) => {
@@ -355,4 +362,5 @@ newTree.levelOrder();
 newTree.inOrder(height);
 newTree.preOrder(depth);
 newTree.postOrder();
+console.log(isBalanced(newTree.root));
 console.log(newTree.root);
