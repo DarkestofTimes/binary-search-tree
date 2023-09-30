@@ -143,7 +143,79 @@ const Tree = (array) => {
         que.shift(0);
       }
       if (!func) {
-        console.log(newArray);
+        console.log(newArray, "levelOrder");
+        return newArray;
+      }
+    },
+
+    inOrder(func) {
+      const newArray = [];
+      const node = this.root;
+
+      const traverse = (node, func, array) => {
+        if (node == null) return;
+
+        traverse(node.left, func, array);
+        if (func) {
+          func(node);
+        } else {
+          array.push(node.value);
+        }
+        traverse(node.right, func, array);
+        return node;
+      };
+      traverse(node, func, newArray);
+
+      if (!func) {
+        console.log(newArray, "inOrder");
+        return newArray;
+      }
+    },
+
+    preOrder(func) {
+      const newArray = [];
+      const node = this.root;
+
+      const traverse = (node, func, array) => {
+        if (node == null) return;
+
+        if (func) {
+          func(node);
+        } else {
+          array.push(node.value);
+        }
+        traverse(node.left, func, array);
+        traverse(node.right, func, array);
+        return node;
+      };
+      traverse(node, func, newArray);
+
+      if (!func) {
+        console.log(newArray, "preOrder");
+        return newArray;
+      }
+    },
+
+    postOrder(func) {
+      const newArray = [];
+      const node = this.root;
+
+      const traverse = (node, func, array) => {
+        if (node == null) return;
+
+        traverse(node.left, func, array);
+        traverse(node.right, func, array);
+        if (func) {
+          func(node);
+        } else {
+          array.push(node.value);
+        }
+        return node;
+      };
+      traverse(node, func, newArray);
+
+      if (!func) {
+        console.log(newArray, "postOrder");
         return newArray;
       }
     },
@@ -246,4 +318,7 @@ newTree.toRemove(3, 13, 17, 25, 68);
 newTree.toFind(4, 12, 15, 25, 64);
 newTree.prettyPrint();
 newTree.levelOrder();
-console.log(newTree);
+newTree.preOrder();
+newTree.inOrder();
+newTree.postOrder();
+console.log(newTree.root);
