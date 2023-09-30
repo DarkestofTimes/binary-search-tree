@@ -125,6 +125,29 @@ const Tree = (array) => {
       });
     },
 
+    levelOrder(func) {
+      const newArray = [];
+      const que = [];
+      const node = this.root;
+      if (node == null) return;
+      que.push(node);
+
+      while (que.length !== 0) {
+        if (!func) {
+          newArray.push(que[0].value);
+        } else {
+          func(que[0]);
+        }
+        if (que[0].left) que.push(que[0].left);
+        if (que[0].right) que.push(que[0].right);
+        que.shift(0);
+      }
+      if (!func) {
+        console.log(newArray);
+        return newArray;
+      }
+    },
+
     prettyPrint(node = this.root, prefix = "", isLeft = true) {
       if (node === null) {
         return;
@@ -222,4 +245,5 @@ newTree.toInsert(3, 15, 76, 89, 54, 98);
 newTree.toRemove(3, 13, 17, 25, 68);
 newTree.toFind(4, 12, 15, 25, 64);
 newTree.prettyPrint();
+newTree.levelOrder();
 console.log(newTree);
