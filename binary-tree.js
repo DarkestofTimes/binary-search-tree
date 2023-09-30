@@ -152,19 +152,21 @@ const Tree = (array) => {
       const newArray = [];
       const node = this.root;
 
-      const traverse = (node, func, array) => {
+      const traverse = (node, func, array, root) => {
         if (node == null) return;
 
-        traverse(node.left, func, array);
+        traverse(node.left, func, array, root);
         if (func) {
-          func(node);
+          func(root, node);
+          console.log(func(root, node), "inOrder");
         } else {
           array.push(node.value);
         }
-        traverse(node.right, func, array);
+        traverse(node.right, func, array, root);
+
         return node;
       };
-      traverse(node, func, newArray);
+      traverse(node, func, newArray, node);
 
       if (!func) {
         console.log(newArray, "inOrder");
@@ -176,19 +178,20 @@ const Tree = (array) => {
       const newArray = [];
       const node = this.root;
 
-      const traverse = (node, func, array) => {
+      const traverse = (node, func, array, root) => {
         if (node == null) return;
 
         if (func) {
-          func(node);
+          func(root, node);
+          console.log(func(root, node), "preOrder");
         } else {
           array.push(node.value);
         }
-        traverse(node.left, func, array);
-        traverse(node.right, func, array);
+        traverse(node.left, func, array, root);
+        traverse(node.right, func, array, root);
         return node;
       };
-      traverse(node, func, newArray);
+      traverse(node, func, newArray, node);
 
       if (!func) {
         console.log(newArray, "preOrder");
@@ -200,19 +203,20 @@ const Tree = (array) => {
       const newArray = [];
       const node = this.root;
 
-      const traverse = (node, func, array) => {
+      const traverse = (node, func, array, root) => {
         if (node == null) return;
 
-        traverse(node.left, func, array);
-        traverse(node.right, func, array);
+        traverse(node.left, func, array, root);
+        traverse(node.right, func, array, root);
         if (func) {
-          func(node);
+          func(root, node);
+          console.log(func(root, node), "postOrder");
         } else {
           array.push(node.value);
         }
         return node;
       };
-      traverse(node, func, newArray);
+      traverse(node, func, newArray, node);
 
       if (!func) {
         console.log(newArray, "postOrder");
@@ -281,6 +285,36 @@ const buildTree = (array, start, end) => {
   return root;
 };
 
+const height = (root, node) => {
+  let lHeight = 0;
+  let rHeight = 0;
+  if (node == null) return;
+
+  if (node.left) {
+    const leftHeight = height(node.left);
+  } else if (node.right) {
+    const rightHeight = height(node.right);
+  }
+
+  return;
+};
+
+const depth = (root, node) => {
+  if (root == null) return -1;
+  if (root == node) return 0;
+
+  const leftDepth = depth(root.left, node);
+  const rightDepth = depth(root.right, node);
+
+  if (leftDepth !== -1) {
+    return leftDepth + 1;
+  } else if (rightDepth !== -1) {
+    return rightDepth + 1;
+  }
+
+  return -1;
+};
+
 const mergeSort = (array) => {
   if (array.length <= 1) return array;
 
@@ -318,7 +352,7 @@ newTree.toRemove(3, 13, 17, 25, 68);
 newTree.toFind(4, 12, 15, 25, 64);
 newTree.prettyPrint();
 newTree.levelOrder();
-newTree.preOrder();
-newTree.inOrder();
+newTree.inOrder(height);
+newTree.preOrder(depth);
 newTree.postOrder();
 console.log(newTree.root);
